@@ -1,0 +1,11 @@
+{% for place in places %}
+  <div style="margin-bottom: 20px;">
+    <h3>{{ place.name }}</h3>
+    <p>{{ place.description|truncatechars:100 }}</p>
+    <p><strong>Category:</strong> {{ place.category.name }}</p>
+    <a href="#">View Details</a>
+    <hr>
+  </div>
+{% empty %}
+  <p>No places found in your area.</p>
+{% endfor %}

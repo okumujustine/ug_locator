@@ -1,0 +1,25 @@
+version: '3.9'
+
+name: ug_locator
+services:
+  db:
+    image: postgis/postgis:latest
+    container_name: db
+    platform: linux/amd64
+    environment:
+      POSTGRES_USER: justine
+      POSTGRES_PASSWORD: justine
+      POSTGRES_DB: ug_locator
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    networks:
+      - communication_network
+
+volumes:
+  postgres_data:
+
+networks:
+  communication_network:
+    driver: bridge

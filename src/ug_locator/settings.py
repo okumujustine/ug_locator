@@ -1,20 +1,27 @@
-import os
 from pathlib import Path
+
+from decouple import config
+
+GDAL_LIBRARY_PATH = "/opt/homebrew/Cellar/gdal/3.10.3_1/lib/libgdal.dylib"
+GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.12.2/lib/libgeos_c.dylib"
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+REPO_DIR = BASE_DIR.parent
+TEMPLATES_DIR = BASE_DIR / "templates"
 
+# create template dirs
+TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "true"
-
-ALLOWED_HOSTS = []
+DEBUG = config("DJANGO_DEBUG", cast=bool)
+CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
+ALLOWED_HOSTS = [".railway.app"]
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -26,6 +33,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "crispy_forms",
+    "crispy_tailwind",
+    "compressor",  # new
+    # "flowbiteapp",  # new
+    "accounts",
+    "places",
 ]
 
 MIDDLEWARE = [
@@ -43,7 +56,7 @@ ROOT_URLCONF = "ug_locator.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TEMPLATES_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -64,8 +77,12 @@ WSGI_APPLICATION = "ug_locator.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "ug_locator",
+        "USER": "justine",
+        "PASSWORD": "justine",
+        "HOST": "localhost",
+        "PORT": "5437",
     }
 }
 
@@ -110,3 +127,25 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# custom configs
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+LEAFLET_CONFIG = {
+    "DEFAUL_CENTER": (55.505, -0.09),
+    "DEFAUL_ZOOM": 13,
+}
+
+# compressor
+COMPRESS_ROOT = BASE_DIR / "static"
+COMPRESS_ENABLED = True
+STATICFILES_FINDERS = ("compressor.finders.CompressorFinder",)
+
+# crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
+
+# authentication
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_REDIRECT_URL = "place_list"

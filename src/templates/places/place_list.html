@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% block content %}
+<h2>Find Nearby Places</h2>
+
+<form hx-get="{% url 'place_list' %}" hx-target="#places-list" hx-trigger="change">
+  <label>Category:</label>
+  <select name="category">
+    <option value="">All</option>
+    {% for cat in categories %}
+      <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Distance (km):</label>
+  <input type="range" name="distance" min="1" max="50" value="10" />
+
+  <input type="hidden" name="lat" id="user-lat">
+  <input type="hidden" name="lng" id="user-lng">
+</form>
+
+<div id="places-list">
+  {% include "places/_place_card.html" %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      document.getElementById("user-lat").value = pos.coords.latitude;
+      document.getElementById("user-lng").value = pos.coords.longitude;
+    });
+  } else {
+    console.warn("Geolocation is not supported by this browser.");
+  }
+});
+</script>
+{% endblock content %}
