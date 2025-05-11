@@ -18,6 +18,7 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool)
+
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 ALLOWED_HOSTS = [".railway.app"]
 if DEBUG:
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.gis",
     "crispy_forms",
     "crispy_tailwind",
     "compressor",  # new
@@ -121,6 +123,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "static/"
 
 # Default primary key field type
@@ -140,7 +143,11 @@ LEAFLET_CONFIG = {
 # compressor
 COMPRESS_ROOT = BASE_DIR / "static"
 COMPRESS_ENABLED = True
-STATICFILES_FINDERS = ("compressor.finders.CompressorFinder",)
+STATICFILES_FINDERS = (
+    "compressor.finders.CompressorFinder",
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 
 # crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
@@ -149,3 +156,5 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 # authentication
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "place_list"
+
+# admin

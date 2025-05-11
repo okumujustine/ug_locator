@@ -10,3 +10,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("places/", include("places.urls")),
 ]
+
+admin.site.site_header = "UgLocate"
+admin.site.site_title = "UgLocate | Discover the best businesses across cities with our location-based service"
+admin.site.index_title = "Give your customers the best experience"

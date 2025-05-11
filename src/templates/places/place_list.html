@@ -1,37 +1,122 @@
 {% extends "_base.html" %}
 {% block content %}
-<h2>Find Nearby Places</h2>
-
-<form hx-get="{% url 'place_list' %}" hx-target="#places-list" hx-trigger="change">
-  <label>Category:</label>
-  <select name="category">
-    <option value="">All</option>
-    {% for cat in categories %}
-      <option value="{{ cat.id }}">{{ cat.name }}</option>
-    {% endfor %}
-  </select>
-
-  <label>Distance (km):</label>
-  <input type="range" name="distance" min="1" max="50" value="10" />
-
-  <input type="hidden" name="lat" id="user-lat">
-  <input type="hidden" name="lng" id="user-lng">
-</form>
-
-<div id="places-list">
-  {% include "places/_place_card.html" %}
+<div class="mb-6">
+  <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+    Discover Businesses Near You
+  </h1>
+  <p class="text-gray-600">
+    Find the best restaurants, banks, supermarkets and more near you.
+  </p>
 </div>
 
+
+<div class="bg-white rounded-lg shadow-md p-4 mb-6">
+  <form 
+    id="search-form"
+    hx-target="#places-list" 
+    hx-get="{% url 'search_places' %}"
+    hx-swap="innerHTML"
+    hx-trigger="change delay:300ms, keyup changed delay:300ms from:#search-query"
+    class="flex flex-col md:flex-row md:items-end gap-4"
+  >
+    <div class="flex-1">
+      <label for="search-query" class="block text-sm font-medium text-gray-700 mb-1">
+        What are you looking for?
+      </label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          🔍
+        </div>
+        <input
+          type="text"
+          id="search-query"
+          name="place_name"
+          placeholder="Restaurants, banks, etc."
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+        />
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="w-full md:w-56">
+      <label for="category" class="block text-sm font-medium text-gray-700 mb-1">
+        Category
+      </label>
+      <select
+        id="category"
+        name="category"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+      >
+        <option value="">--All--</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <input type="hidden" name="lat" id="user-lat">
+    <input type="hidden" name="lng" id="user-lng">
+  </form>
+
+  <!-- Advanced Filters -->
+  <div class="mt-4">
+    <button
+      type="button"
+      id="toggle-advanced"
+      class="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center"
+    >
+      Show advanced filters
+      <svg id="chevron" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="advanced-filters" class="hidden mt-4 pt-4 border-t border-gray-200">
+    <label for="distance" class="block text-sm font-medium text-gray-700 mb-1">
+      Distance: <span id="distance-value">25</span> km
+    </label>
+    <input
+      type="range"
+      id="distance"
+      name="distance"
+      min="1"
+      max="50"
+      value="25"
+      class="w-full h-2 bg-gray-200 rounded-lg accent-teal-600"
+      oninput="document.getElementById('distance-value').innerText = this.value"
+    />
+    <div class="flex justify-between text-xs text-gray-500 mt-1">
+      <span>1 km</span>
+      <span>25 km</span>
+      <span>50 km</span>
+    </div>
+  </div>
+</div>
+
+<div id="places-list">
+  {% include "places/_places_cards.html" %}
+</div>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("toggle-advanced").addEventListener("click", function () {
+    const adv = document.getElementById("advanced-filters");
+    const chevron = document.getElementById("chevron");
+    const isHidden = adv.classList.toggle("hidden");
+    this.innerText = isHidden ? "Show advanced filters" : "Hide advanced filters";
+    this.appendChild(chevron);
+    chevron.classList.toggle("rotate-180", !isHidden);
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      document.getElementById("user-lat").value = pos.coords.latitude;
-      document.getElementById("user-lng").value = pos.coords.longitude;
-    });
-  } else {
-    console.warn("Geolocation is not supported by this browser.");
-  }
-});
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        document.getElementById("user-lat").value = pos.coords.latitude;
+        document.getElementById("user-lng").value = pos.coords.longitude;
+
+        htmx.trigger("#search-form", "change");
+      });
+    }
+  });
+
 </script>
 {% endblock content %}

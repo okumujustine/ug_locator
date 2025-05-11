@@ -5,14 +5,23 @@ from django.shortcuts import render
 from .models import Category, Place
 
 
-def place_list(request):
+def places_page(request):
     categories = Category.objects.all()
+
+    return render(request, "places/place_list.html", {"categories": categories})
+
+
+def search_places(request):
     places = Place.objects.all()
 
     user_lat = request.GET.get("lat")
     user_lng = request.GET.get("lng")
     distance_km = request.GET.get("distance", 10)
     category_id = request.GET.get("category")
+    place_name = request.GET.get("place_name")
+
+    if place_name:
+        places = places.filter(name__icontains=place_name)
 
     if user_lat and user_lng:
         user_location = Point(float(user_lng), float(user_lat), srid=4326)
@@ -25,6 +34,5 @@ def place_list(request):
 
     context = {
         "places": places,
-        "categories": categories,
     }
-    return render(request, "places/place_list.html", context)
+    return render(request, "places/_places_cards.html", context)
