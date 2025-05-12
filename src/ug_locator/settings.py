@@ -2,8 +2,8 @@ from pathlib import Path
 
 from decouple import config
 
-GDAL_LIBRARY_PATH = "/opt/homebrew/Cellar/gdal/3.10.3_1/lib/libgdal.dylib"
-GEOS_LIBRARY_PATH = "/opt/homebrew/Cellar/geos/3.12.2/lib/libgeos_c.dylib"
+# GDAL_LIBRARY_PATH = config("GDAL_LIBRARY_PATH")
+# GEOS_LIBRARY_PATH = config("GEOS_LIBRARY_PATH")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "crispy_forms",
-    "crispy_tailwind",
     "compressor",  # new
     # "flowbiteapp",  # new
     "accounts",
@@ -83,8 +82,8 @@ DATABASES = {
         "NAME": "ug_locator",
         "USER": "justine",
         "PASSWORD": "justine",
-        "HOST": "localhost",
-        "PORT": "5437",
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": "5432",
     }
 }
 

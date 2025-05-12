@@ -7,6 +7,19 @@
   <p class="text-gray-600">
     Find the best restaurants, banks, supermarkets and more near you.
   </p>
+  <div>
+    <div class="flex items-center mt-2">
+      <span class="text-sm text-gray-500 mr-2">Your current location:</span>
+      <span id="current-location" class="text-sm font-semibold text-teal-600"></span>
+      <button
+        id="set-location"
+        class="ml-4 px-3 py-1 text-sm text-white bg-teal-600 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        onclick="setLocation()"
+      >
+        Set Location
+      </button>
+
+  </div>
 </div>
 
 
@@ -16,7 +29,7 @@
     hx-target="#places-list" 
     hx-get="{% url 'search_places' %}"
     hx-swap="innerHTML"
-    hx-trigger="change delay:300ms, keyup changed delay:300ms from:#search-query"
+    hx-trigger="load, change delay:300ms, keyup changed delay:300ms from:#search-query"
     class="flex flex-col md:flex-row md:items-end gap-4"
   >
     <div class="flex-1">
@@ -107,16 +120,16 @@
     chevron.classList.toggle("rotate-180", !isHidden);
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-  if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function (pos) {
-        document.getElementById("user-lat").value = pos.coords.latitude;
-        document.getElementById("user-lng").value = pos.coords.longitude;
+  // document.addEventListener("DOMContentLoaded", function () {
+  // if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(function (pos) {
+  //       document.getElementById("user-lat").value = pos.coords.latitude;
+  //       document.getElementById("user-lng").value = pos.coords.longitude;
 
-        htmx.trigger("#search-form", "change");
-      });
-    }
-  });
+  //       htmx.trigger("#search-form", "change");
+  //     });
+  //   }
+  // });
 
 </script>
 {% endblock content %}

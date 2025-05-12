@@ -17,6 +17,22 @@ services:
     networks:
       - communication_network
 
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: backend
+    ports:
+      - 8000:8000
+    env_file: ".env.development"
+
+    volumes:
+      - ./src:/app
+    networks:
+      - communication_network
+    depends_on:
+     - db
+
 volumes:
   postgres_data:
 

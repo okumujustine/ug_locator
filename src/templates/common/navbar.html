@@ -18,6 +18,7 @@
       </div>
 
       <div class="flex items-center space-x-2">
+        {% if user.is_athenticated %}
         <button class="px-4 py-2 text-teal-600 hover:text-teal-800 font-medium transition duration-150 ease-in-out">
           Login
         </button>
@@ -27,6 +28,21 @@
         <button class="p-2 text-gray-600 hover:text-gray-800 md:hidden">
           <User class="h-5 w-5" />
         </button>
+        {% else %}
+        <!-- show username , logout and profile links -->
+        <button class="p-2 text-gray-600 hover:text-gray-800 md:hidden">
+          <i data-lucide="user" class="h-5 w-5 text-gray-400"></i>
+        </button>
+        <a class="px-4 py-2 text-teal-600 hover:text-teal-800 font-medium transition duration-150 ease-in-out">
+          {{ user.username }}
+        </button>
+        <a class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition duration-150 ease-in-out">
+          Logout
+        </a>
+        <a class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition duration-150 ease-in-out">
+          Profile
+        </a>
+        {% endif %}
       </div>
     </div>
     
