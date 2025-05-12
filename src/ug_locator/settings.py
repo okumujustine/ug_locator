@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from decouple import config
+from django import conf
 
 # GDAL_LIBRARY_PATH = config("GDAL_LIBRARY_PATH")
 # GEOS_LIBRARY_PATH = config("GEOS_LIBRARY_PATH")
@@ -79,10 +80,10 @@ WSGI_APPLICATION = "ug_locator.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "ug_locator",
-        "USER": "justine",
-        "PASSWORD": "justine",
-        "HOST": config("DB_HOST", default="localhost"),
+        "NAME": config("POSTGRES_DB"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "HOST": config("DB_HOST"),
         "PORT": "5432",
     }
 }
@@ -124,6 +125,9 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
