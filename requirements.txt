@@ -1,5 +1,0 @@
-Django==5.2
-python-decouple==3.8
-django_compressor==4.5.1
-psycopg==3.2.8
-django-crispy-forms==2.4

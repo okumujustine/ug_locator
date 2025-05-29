@@ -1,0 +1,40 @@
+version: '3.9'
+
+name: ug_locator_dev
+services:
+  db_dev:
+    image: postgis/postgis:latest
+    container_name: db_dev
+    platform: linux/amd64
+    env_file: .env.development
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data_dev:/var/lib/postgresql/data
+    networks:
+      - backend_network_dev
+
+  backend_dev:
+    build: 
+      context: backend/
+      dockerfile: Dockerfile.dev
+    container_name: backend_dev
+    ports:
+      - 8000:8000
+    env_file: .env.development
+    volumes:
+      - ./backend:/app
+    networks:
+      - backend_network_dev
+    depends_on:
+     - db_dev
+
+volumes:
+  db_data_dev:
+
+networks:
+  backend_network_dev:
+    driver: bridge
