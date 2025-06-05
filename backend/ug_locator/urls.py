@@ -4,10 +4,12 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path("", include("places.urls")),
+    path("places/", include("places.urls")),
     path("healthz", views.healthz_view),
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("auth/", include("djoser.urls")),
+    path("auth/", include("djoser.urls.jwt")),
 ]
 
 admin.site.site_header = "UgLocate"

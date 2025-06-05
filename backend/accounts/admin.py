@@ -9,4 +9,5 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = list(UserAdmin.fieldsets) + [
         ("Extra Info", {"fields": ("role", "phone_number")}),
     ]
-    list_display = ("username", "email", "role", "is_staff")
+    list_display = ("email", "role", "is_staff")
+    ordering = ("email",)

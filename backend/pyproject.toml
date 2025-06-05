@@ -10,6 +10,7 @@ dependencies = [
     "django-compressor==4.5.1",
     "django-crispy-forms==2.4",
     "djangorestframework==3.16.0",
+    "djoser>=2.3.1",
     "markdown==3.8",
     "psycopg==3.2.8",
     "python-decouple==3.8",

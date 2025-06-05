@@ -36,9 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
+    # third party
     "rest_framework",
     "crispy_forms",
     "compressor",
+    "rest_framework.authtoken",
+    "djoser",
+
+    # mine
     "accounts",
     "places",
 ]
@@ -160,4 +165,13 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "place_list"
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
 # admin

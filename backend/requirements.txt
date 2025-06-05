@@ -5,3 +5,4 @@ psycopg==3.2.8
 django-crispy-forms==2.4
 djangorestframework==3.16.0
 Markdown==3.8
+djoser==2.3.1
