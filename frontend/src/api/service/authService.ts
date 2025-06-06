@@ -16,14 +16,9 @@ interface RegisterUserResponse {
 export const registerUserService = async (
   registerRequestParams: RegisterUserRequestParams
 ): Promise<RegisterUserResponse> => {
-  try {
-    const resp = axiosInstance.post(
-      apiServiceEndpoints.registerUser,
-      registerRequestParams
-    );
-    return (await resp).data;
-  } catch (error) {
-    console.log("---", error);
-    throw new Error("User registration failed");
-  }
+  const resp = axiosInstance.post(
+    apiServiceEndpoints.registerUser,
+    registerRequestParams
+  );
+  return (await resp).data;
 };

@@ -1,35 +1,59 @@
 import { Map } from "lucide-react";
-import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUserService } from "../api/service/authService";
 
+type RegisterUserInputParams = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  // await registerUserService({
+  //   name,
+  //   email,
+  //   password,
+  // });
+  // alert("Registration successful");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors },
+  } = useForm<RegisterUserInputParams>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+  const onSubmit: SubmitHandler<RegisterUserInputParams> = async (data) => {
     try {
       await registerUserService({
-        name,
-        email,
-        password,
+        name: data.name,
+        email: data.email,
+        password: data.password,
       });
       alert("Registration successful");
-      // navigate("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      navigate("/login");
+    } catch (error) {
+      const appErrors = error.response.data;
+
+      Object.entries(appErrors).forEach(([field, messages]) => {
+        if (Array.isArray(messages) && messages.length > 0) {
+          setError(field as keyof RegisterUserInputParams, {
+            type: "server",
+            message: messages[0],
+          });
+        }
+      });
     }
   };
 
@@ -55,94 +79,97 @@ const Register = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Name
               </label>
               <div className="mt-1">
                 <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  {...register("name", {
+                    required: "Name is required",
+                    minLength: {
+                      value: 3,
+                      message: "Name must be atleast 3 characters",
+                    },
+                  })}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <div className="mt-1">
                 <input
-                  id="email"
-                  name="email"
                   type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email", {
+                    required: "Email is required",
+                  })}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <div className="mt-1">
                 <input
-                  id="password"
-                  name="password"
                   type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be atleast 8 characters",
+                    },
+                  })}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="confirm-password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Confirm password
               </label>
               <div className="mt-1">
                 <input
-                  id="confirm-password"
-                  name="confirm-password"
                   type="password"
-                  autoComplete="new-password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  {...register("confirmPassword", {
+                    required: "Confirm password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Confirm password must be atleast 8 characters",
+                    },
+                    validate: (val) =>
+                      val == watch("password") || "Password do not match",
+                  })}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
 
