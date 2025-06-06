@@ -26,7 +26,8 @@ const Register = () => {
         email,
         password,
       });
-      navigate("/");
+      alert("Registration successful");
+      // navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     }

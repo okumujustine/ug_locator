@@ -1,4 +1,5 @@
 import axiosInstance from "../axios";
+import { apiServiceEndpoints } from "../endpoints";
 
 interface RegisterUserRequestParams {
   name: string;
@@ -16,7 +17,10 @@ export const registerUserService = async (
   registerRequestParams: RegisterUserRequestParams
 ): Promise<RegisterUserResponse> => {
   try {
-    const resp = axiosInstance.post("/auth/users/", registerRequestParams);
+    const resp = axiosInstance.post(
+      apiServiceEndpoints.registerUser,
+      registerRequestParams
+    );
     return (await resp).data;
   } catch (error) {
     console.log("---", error);
