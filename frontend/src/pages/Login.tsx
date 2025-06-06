@@ -1,6 +1,7 @@
 import { Map } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUserService } from "../api/service/authService";
 
 interface LoginUserInputParams {
   email: string;
@@ -14,12 +15,27 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<LoginUserInputParams>({
     defaultValues: {},
   });
 
-  const onUserLogin = async (data) => {
-    console.log("data");
+  const onUserLogin: SubmitHandler<LoginUserInputParams> = async (data) => {
+    try {
+      const loginResp = await loginUserService({
+        email: data.email,
+        password: data.password,
+      });
+      console.log(loginResp);
+
+      // --- frontend ---
+      // store in localstorage
+      // navigate("/");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const appErrors = error.response.data.detail;
+      alert(appErrors);
+    }
   };
 
   return (

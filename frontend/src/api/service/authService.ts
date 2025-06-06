@@ -13,10 +13,15 @@ interface RegisterUserResponse {
   id: number;
 }
 
-// interface LoginUserRequestParams {
-//   email: string;
-//   password: string;
-// }
+interface LoginUserRequestParams {
+  email: string;
+  password: string;
+}
+
+interface LoginUserResponse {
+  refresh: string;
+  access: string;
+}
 
 export const registerUserService = async (
   registerRequestParams: RegisterUserRequestParams
@@ -24,6 +29,16 @@ export const registerUserService = async (
   const resp = axiosInstance.post(
     apiServiceEndpoints.registerUser,
     registerRequestParams
+  );
+  return (await resp).data;
+};
+
+export const loginUserService = async (
+  loginRequestParams: LoginUserRequestParams
+): Promise<LoginUserResponse> => {
+  const resp = axiosInstance.post(
+    apiServiceEndpoints.loginUser,
+    loginRequestParams
   );
   return (await resp).data;
 };

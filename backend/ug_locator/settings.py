@@ -177,6 +177,14 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
+# djoser
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    # "SERIALIZERS": {
+
+    # }
+}
+
 # admin
 
 # cors
