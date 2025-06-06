@@ -13,6 +13,11 @@ interface RegisterUserResponse {
   id: number;
 }
 
+// interface LoginUserRequestParams {
+//   email: string;
+//   password: string;
+// }
+
 export const registerUserService = async (
   registerRequestParams: RegisterUserRequestParams
 ): Promise<RegisterUserResponse> => {

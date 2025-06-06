@@ -13,13 +13,6 @@ type RegisterUserInputParams = {
 const Register = () => {
   const navigate = useNavigate();
 
-  // await registerUserService({
-  //   name,
-  //   email,
-  //   password,
-  // });
-  // alert("Registration successful");
-
   const {
     register,
     handleSubmit,
@@ -34,7 +27,9 @@ const Register = () => {
       confirmPassword: "",
     },
   });
-  const onSubmit: SubmitHandler<RegisterUserInputParams> = async (data) => {
+  const onUserRegister: SubmitHandler<RegisterUserInputParams> = async (
+    data
+  ) => {
     try {
       await registerUserService({
         name: data.name,
@@ -43,7 +38,8 @@ const Register = () => {
       });
       alert("Registration successful");
       navigate("/login");
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       const appErrors = error.response.data;
 
       Object.entries(appErrors).forEach(([field, messages]) => {
@@ -79,7 +75,7 @@ const Register = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onUserRegister)} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Name
@@ -112,6 +108,10 @@ const Register = () => {
                   type="email"
                   {...register("email", {
                     required: "Email is required",
+                    pattern: {
+                      value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                      message: "Invalid email address",
+                    },
                   })}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 />
