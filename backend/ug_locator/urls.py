@@ -8,8 +8,8 @@ urlpatterns = [
     path("healthz", views.healthz_view),
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("auth/", include("djoser.urls")),
-    path("auth/", include("djoser.urls.jwt")),
+    path("api/v1/auth/", include("djoser.urls")),
+    path("api/v1/", include("djoser.urls.jwt")),
 ]
 
 admin.site.site_header = "UgLocate"
