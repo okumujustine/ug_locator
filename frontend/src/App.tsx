@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
-import Navbar from './components/Navbar';
-import SearchFilters from './components/SearchFilters';
-import ResultsList from './components/ResultsList';
-import MapView from './components/MapView';
-import ChatAssistant from './components/ChatAssistant';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import LocationSelect from './pages/LocationSelect';
-import BusinessDetailsPage from './pages/BusinessDetailsPage';
-import { useGeolocation } from './hooks/useGeolocation';
-import { MOCK_BUSINESSES, filterBusinesses } from './utils/mockData';
-import { Business, SearchFiltersType } from './types';
+import { MapPin } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
+import ChatAssistant from "./components/ChatAssistant";
+import MapView from "./components/MapView";
+import Navbar from "./components/Navbar";
+import ResultsList from "./components/ResultsList";
+import SearchFilters from "./components/SearchFilters";
+import { useGeolocation } from "./hooks/useGeolocation";
+import BusinessDetailsPage from "./pages/BusinessDetailsPage";
+import LocationSelect from "./pages/LocationSelect";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import { Business, SearchFiltersType } from "./types";
+import { MOCK_BUSINESSES, filterBusinesses } from "./utils/mockData";
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<SearchFiltersType>({
-    query: '',
-    category: 'all',
-    distance: 25
+    query: "",
+    category: "all",
+    distance: 25,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
@@ -30,7 +35,7 @@ function App() {
   const [userLocation, setUserLocation] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedLocation = localStorage.getItem('userLocation');
+    const savedLocation = localStorage.getItem("userLocation");
     if (savedLocation) {
       const { description } = JSON.parse(savedLocation);
       setUserLocation(description);
@@ -42,34 +47,34 @@ function App() {
       setIsMobile(window.innerWidth < 1024);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleOpenAuth = (mode: 'login' | 'signup') => {
-    window.location.href = mode === 'login' ? '/login' : '/register';
+  const handleOpenAuth = (mode: "login" | "signup") => {
+    window.location.href = mode === "login" ? "/login" : "/register";
   };
 
   useEffect(() => {
-    setFilters(prev => ({ ...prev, query: searchQuery }));
+    setFilters((prev) => ({ ...prev, query: searchQuery }));
   }, [searchQuery]);
 
   useEffect(() => {
     setIsLoading(true);
-    
+
     const timer = setTimeout(() => {
       const filtered = filterBusinesses(MOCK_BUSINESSES, filters);
       setFilteredBusinesses(filtered);
       setIsLoading(false);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, [filters]);
 
   const handleFindNearby = () => {
     setIsLoading(true);
     requestGeolocation();
-    
+
     setTimeout(() => {
       setFilteredBusinesses(MOCK_BUSINESSES);
       setIsLoading(false);
@@ -77,7 +82,7 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    const savedLocation = localStorage.getItem('userLocation');
+    const savedLocation = localStorage.getItem("userLocation");
     if (!savedLocation) {
       return <Navigate to="/select-location" />;
     }
@@ -101,14 +106,14 @@ function App() {
             Find local businesses and services across the globe
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {(!isMobile || !selectedBusiness) && (
             <>
               {!isMobile && (
                 <div className="lg:col-span-8">
                   <div className="h-[calc(100vh-280px)] sticky top-24">
-                    <MapView 
+                    <MapView
                       businesses={filteredBusinesses}
                       userLocation={location}
                       selectedBusinessId={selectedBusiness}
@@ -116,17 +121,17 @@ function App() {
                   </div>
                 </div>
               )}
-              
+
               <div className={isMobile ? "col-span-1" : "lg:col-span-4"}>
-                <SearchFilters 
-                  filters={filters} 
-                  setFilters={setFilters} 
+                <SearchFilters
+                  filters={filters}
+                  setFilters={setFilters}
                   onFindNearby={handleFindNearby}
                   isLoading={isLoading}
                 />
-                
-                <ResultsList 
-                  businesses={filteredBusinesses} 
+
+                <ResultsList
+                  businesses={filteredBusinesses}
                   isLoading={isLoading}
                   selectedBusinessId={selectedBusiness}
                   onBusinessSelect={(id) => {
