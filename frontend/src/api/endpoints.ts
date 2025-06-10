@@ -1,4 +1,4 @@
 export const apiServiceEndpoints = {
-  registerUser: "/auth/users/",
-  loginUser: "/accounts/auth/jwt/create/",
+  registerUser: "/accounts/register/",
+  loginUser: "/accounts/login/",
 };

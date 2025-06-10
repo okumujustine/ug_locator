@@ -6,8 +6,8 @@ from accounts.models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    fieldsets = list(UserAdmin.fieldsets) + [
+    fieldsets = [
         ("Extra Info", {"fields": ("role", "phone_number")}),
     ]
-    list_display = ("email", "role", "is_staff")
+    list_display = ("email", "role", "is_active", "is_staff")
     ordering = ("email",)

@@ -28,7 +28,8 @@ export const registerUserService = async (
 ): Promise<RegisterUserResponse> => {
   const resp = axiosInstance.post(
     apiServiceEndpoints.registerUser,
-    registerRequestParams
+    registerRequestParams,
+    { withCredentials: true }
   );
   return (await resp).data;
 };
@@ -38,7 +39,8 @@ export const loginUserService = async (
 ): Promise<LoginUserResponse> => {
   const resp = axiosInstance.post(
     apiServiceEndpoints.loginUser,
-    loginRequestParams
+    loginRequestParams,
+    { withCredentials: true }
   );
   return (await resp).data;
 };

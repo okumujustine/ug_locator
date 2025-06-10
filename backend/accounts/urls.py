@@ -1,12 +1,17 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from .serializers import CutomObtainPairView
-
-from .views import CustomUserDetailView, UserRegistrationView
+from .views import (
+    CustomUserDetailView, 
+    UserRegistrationView, 
+    UserLogoutView,
+    UserLoginView,
+    CookieTokenRefreshView
+)
 
 urlpatterns = [
-    path('auth/jwt/create/', CutomObtainPairView.as_view(), name='auth-token-login'),
-    path("info/", CustomUserDetailView.as_view(), name="account-info"),
-    path("register/", UserRegistrationView.as_view(), name="register-user"),
+    path("register/", UserRegistrationView.as_view(), name="user-registration"),
+    path("login/", UserLoginView.as_view(), name="user-login"),
+    path("refresh/", CookieTokenRefreshView.as_view(), name="token-refresh"),
+    path("info/", CustomUserDetailView.as_view(), name="user-info"),
+    path("logout/", UserLogoutView.as_view(), name="user-logout"),
 ]
