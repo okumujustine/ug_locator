@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import config
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "compressor",
     "rest_framework.authtoken",
-    "djoser",
     "corsheaders",
 
     # mine
@@ -169,24 +169,19 @@ LOGIN_REDIRECT_URL = "place_list"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        "rest_framework.authentication.TokenAuthentication",
+        ""
     ]
 }
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
+  'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+  'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+  'AUTH_HEADER_TYPES': ('JWT',),
 }
 
-# djoser
-DJOSER = {
-    "LOGIN_FIELD": "email",
-    # "SERIALIZERS": {
-
-    # }
-}
 
 # admin
 
 # cors
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGINS=["*"]
