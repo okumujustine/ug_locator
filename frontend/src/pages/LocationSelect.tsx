@@ -9,7 +9,7 @@ const LocationSelect = () => {
     useState<google.maps.places.Autocomplete | null>(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.GOOGLE_MAP_API || "",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API || "",
     libraries: ["places"],
   });
 
@@ -27,6 +27,7 @@ const LocationSelect = () => {
           ...place.geometry?.location?.toJSON(),
         })
       );
+      //TODO: add user location to DB the moment the user logs in
     } else {
       alert("Please enter text");
     }
