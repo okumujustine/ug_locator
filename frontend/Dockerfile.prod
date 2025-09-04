@@ -1,2 +1,0 @@
-FROM node:slim-bookworm
-ENV NODE_ENV=production

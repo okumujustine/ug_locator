@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # mine
     "accounts",
     "places",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
